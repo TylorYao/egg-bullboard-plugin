@@ -1,0 +1,13 @@
+{
+  "extends": [
+    "eslint-config-egg/typescript",
+    "eslint-config-egg/lib/rules/enforce-node-prefix"
+  ],
+  "root": true,
+  "rules": {
+    "@typescript-eslint/indent": "off",
+    "array-bracket-spacing": "off",
+    "comma-dangle": "off",
+    "newline-per-chained-call": "off"
+  }
+}
