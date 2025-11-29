@@ -54,7 +54,7 @@
     "name": "bullboard",
     "dependencies": [
       "static",
-      "ejs"
+      "view"
     ]
   },
   "keywords": [

@@ -31,6 +31,7 @@ npm i egg-bullboard-plugin
 This plugin depends on the following EggJS plugins:
 
 - **static plugin** (built-in): Required to serve BullBoard static assets
+- **view plugin** (built-in): Required to resolve BullBoard UI file render engine
 - **ejs plugin**: Required to render the BullBoard user interface, as it is written in EJS
 
 Make sure these plugins are enabled in your application's plugin configuration.
@@ -44,10 +45,17 @@ export default {
     enable: true,
     package: 'egg-bullboard-plugin',
   },
+  view: {
+    mapping: {
+      '.ejs': 'ejs', // this maps .ejs file to the render engine of ejs, which by this case registered by egg-view-ejs, any capable one could do
+    },
+  },
   ejs: {
     enable: true,
     package: 'egg-view-ejs',
   },
+  // recommend ejs rendering plugin but could be replaced, any capable one could do, as long as the ext mapping is correct. so regarding this the required egg-view-ejs dependency is removed for flexibility, BUT DON'T FORGET TO ENABLE ONE!!!
+
   // static plugin is enabled by default; this bullboard plugin will tweak its configuration to serve bullboard UI assets
 };
 ```

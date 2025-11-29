@@ -19,5 +19,7 @@ agent.d.ts
 app.js
 app.d.ts
 lib/*.d.ts
+lib/**/*.d.ts
 lib/*.js
+lib/**/*.js
 

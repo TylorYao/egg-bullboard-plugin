@@ -18,6 +18,7 @@ export type EggAdaptorOpt = {
 export class EggAdaptor implements IServerAdapter {
   protected readonly app: IApp;
   protected basePath = '';
+  protected viewPath = '';
   protected bullBoardQueues: BullBoardQueues | undefined;
   protected errorHandler:
     | ((error: Error) => ControllerHandlerReturnType)
@@ -34,10 +35,19 @@ export class EggAdaptor implements IServerAdapter {
     return this;
   }
   public setViewsPath(viewPath: string): IServerAdapter {
+    this.viewPath = viewPath;
+    /**
+     * Ideally, the view path should be sufficient to locate UI files.
+     * However, due to limitations in the view plugin's path resolution,
+     * we modify the view root configuration here as a workaround.
+     * This would impact view rendering performance by adding an extra round of path searching
+     * but simplifies the implementation,otherwise we need to manually resolve the render engine
+     * which should violate the framework principal
+     */
     this.app.config.view.root = [this.app.config.view.root, viewPath].join(',');
     return this;
   }
-  private composePath(relPath: string) {
+  private composeRoutePath(relPath: string) {
     return path.join(this.basePath, relPath);
   }
   public setStaticPath(
@@ -47,7 +57,7 @@ export class EggAdaptor implements IServerAdapter {
     const oldDirs: any[] = toArray(this.app.config.static?.dirs).filter(
       Boolean
     );
-    const curPrefix = this.composePath(staticsRoute);
+    const curPrefix = this.composeRoutePath(staticsRoute);
     const curDirs = [{ prefix: curPrefix, dir: staticsPath }];
 
     this.app.config.static = {
@@ -79,7 +89,10 @@ export class EggAdaptor implements IServerAdapter {
     this.basePath = path;
     return this;
   }
-  async handleRouteError(ctx: IApp['context'], next: () => Promise<void>) {
+  handleRouteError = async (
+    ctx: IApp['context'],
+    next: () => Promise<void>
+  ) => {
     try {
       await next();
     } catch (error) {
@@ -89,14 +102,14 @@ export class EggAdaptor implements IServerAdapter {
         ctx.body = body;
       }
     }
-  }
+  };
 
   protected registerEntryRoute() {
     const { entryRoute } = this;
     appAssert(!!entryRoute, 'entryRoute not set');
     const entryRoutes = toArray(entryRoute.route);
     entryRoutes.forEach(entryRoutePath => {
-      const joinEntryPath = path.join(this.basePath, entryRoutePath);
+      const joinEntryPath = this.composeRoutePath(entryRoutePath);
       this.app.router[entryRoute.method](
         joinEntryPath,
         this.handleRouteError,
@@ -120,7 +133,7 @@ export class EggAdaptor implements IServerAdapter {
       methods.forEach(method => {
         routes.forEach(routePath => {
           this.app.router[method](
-            this.composePath(routePath),
+            this.composeRoutePath(routePath),
             this.handleRouteError,
             async ctx => {
               const res = await apiRoute.handler({
