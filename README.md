@@ -44,6 +44,11 @@ export default {
     enable: true,
     package: 'egg-bullboard-plugin',
   },
+  ejs: {
+    enable: true,
+    package: 'egg-view-ejs',
+  },
+  // static plugin is enabled by default; this bullboard plugin will tweak its configuration to serve bullboard UI assets
 };
 ```
 
