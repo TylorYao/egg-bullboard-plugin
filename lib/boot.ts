@@ -36,6 +36,6 @@ export class BullBoardBootHook implements IBoot {
     this.app = app;
   }
   configWillLoad(): void {
-    this.app.addSingleton('bullboard', createBullBoardClient as any);
+    this.app.addSingleton('bullboard', createBullBoardClient);
   }
 }
