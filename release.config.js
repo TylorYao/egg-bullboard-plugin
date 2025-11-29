@@ -4,6 +4,7 @@ module.exports = {
   branches: [
     {
       name: 'main',
+      range: '4.x', // or '2.x' depending on what main should publish
       channel: 'next',
     },
     {

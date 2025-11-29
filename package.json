@@ -39,7 +39,8 @@
     "ci": "npm run lint && npm run cov && npm run prepublishOnly",
     "build": "tsc -p ./tsconfig.json",
     "clean": "tsc --build --clean",
-    "prepublishOnly": "npm run clean && npm run build"
+    "prepublishOnly": "npm run clean && npm run build",
+    "rm": "rm -f lib/*.js lib/*.d.ts lib/**/*.js lib/**/*.d.ts config/*.js config/*.d.ts config/**/*.js config/**/*.d.ts app.js app.d.ts agent.js agent.d.ts"
   },
   "files": [
     "config/*.js",
