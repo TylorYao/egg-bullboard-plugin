@@ -1,0 +1,8 @@
+{
+  "name": "example",
+  "version": "0.0.1",
+  "type": "module",
+  "devDependencies": {
+    "egg-view-ejs": "^3.0.0"
+  }
+}
