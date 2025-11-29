@@ -92,5 +92,10 @@
   ],
   "types": "./dist/commonjs/index.d.ts",
   "main": "./dist/commonjs/index.js",
-  "module": "./dist/esm/index.js"
+  "module": "./dist/esm/index.js",
+  "release": {
+    "branches": [
+      "main"
+    ]
+  }
 }
