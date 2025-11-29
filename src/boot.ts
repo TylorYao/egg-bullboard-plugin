@@ -42,11 +42,11 @@ export class BullBoardBootHook implements ILifecycleBoot {
   }
   configWillLoad(): void {
     this.app.addSingleton('bullboard', createBullBoardClient as any);
-    Reflect.defineProperty(this.app, 'bullboard', {
-      get() {
-        return this.bullboard;
-      },
-    });
+    // Reflect.defineProperty(this.app, 'bullboard', {
+    //   get() {
+    //     return this.bullboard;
+    //   },
+    // });
   }
 
   configDidLoad(): void {}

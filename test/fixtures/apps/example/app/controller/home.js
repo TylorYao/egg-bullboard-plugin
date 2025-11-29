@@ -9,7 +9,6 @@ class HomeController extends Controller {
     this.ctx.body = this.app.config.bullboard;
   }
   async client() {
-    console.log(`this.app.bullboard`, this.app.bullboard);
     this.ctx.body = this.app.bullboard;
   }
 }
