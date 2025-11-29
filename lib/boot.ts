@@ -1,7 +1,7 @@
 import type { IBoot } from 'egg';
 import { createBullBoard } from '@bull-board/api';
 
-import { EggAdaptor } from './utils/adaptor';
+import { EggAdapter } from './utils/adapter';
 import { appAssert, MESSAGE_PREFIX } from './utils/helper';
 import { BullBoardClient, BullBoardClientOptions, IApp } from './types';
 
@@ -12,7 +12,7 @@ export function createBullBoardClient(
 ): BullBoardClient {
   const { basePath, boardOptions } = config;
   appAssert(!!basePath, 'basePath is required');
-  const serverAdapter = new EggAdaptor(app, {
+  const serverAdapter = new EggAdapter(app, {
     basePath,
   });
   const instance: BullBoardClient['instance'] = createBullBoard({

@@ -11,11 +11,11 @@ import { appAssert, toArray } from './helper';
 import path from 'node:path';
 import type { IApp } from '../types';
 
-export type EggAdaptorOpt = {
+export type EggAdapterOpt = {
   basePath: string;
 };
 
-export class EggAdaptor implements IServerAdapter {
+export class EggAdapter implements IServerAdapter {
   protected readonly app: IApp;
   protected basePath = '';
   protected viewPath = '';
@@ -26,7 +26,7 @@ export class EggAdaptor implements IServerAdapter {
   protected uiConfig: UIConfig = {};
   protected entryRoute: AppViewRoute | null = null;
   protected apiRoutes: AppControllerRoute[] | null = null;
-  constructor(app: IApp, opt: EggAdaptorOpt) {
+  constructor(app: IApp, opt: EggAdapterOpt) {
     this.app = app;
     this.setBasePath(opt.basePath);
   }
@@ -85,7 +85,7 @@ export class EggAdaptor implements IServerAdapter {
     return this;
   }
 
-  protected setBasePath(path: string): EggAdaptor {
+  protected setBasePath(path: string): EggAdapter {
     this.basePath = path;
     return this;
   }
