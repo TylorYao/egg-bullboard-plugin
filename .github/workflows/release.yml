@@ -10,6 +10,7 @@ jobs:
     permissions:
       id-token: write # allow OIDC token
       contents: write # usually needed for release
+      deployments: 'write'
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
