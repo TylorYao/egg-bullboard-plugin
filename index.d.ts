@@ -1,3 +1,4 @@
+import type { BullBoardClient, BullBoardConfig } from './lib/types';
 declare module 'egg' {
   interface Application {
     bullboard: BullBoardClient;

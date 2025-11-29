@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import { mm, MockApplication } from '@eggjs/mock';
+import mm, { type MockApplication } from 'egg-mock';
 
 describe('test/index.test.ts', () => {
   let app: MockApplication;

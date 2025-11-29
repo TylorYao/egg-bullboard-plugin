@@ -9,3 +9,15 @@ run/
 dist/
 .eslintcache
 
+# v3
+lib/*.js
+lib/*.d.ts
+config/*.js
+config/*.d.ts
+agent.js
+agent.d.ts
+app.js
+app.d.ts
+lib/*.d.ts
+lib/*.js
+

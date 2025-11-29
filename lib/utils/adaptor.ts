@@ -7,17 +7,16 @@ import {
   UIConfig,
 } from '@bull-board/api/typings/app';
 
-import { appAssert, toArray } from './helper.js';
+import { appAssert, toArray } from './helper';
 import path from 'node:path';
-
-import { EggCore } from '@eggjs/core';
+import type { IApp } from '../types';
 
 export type EggAdaptorOpt = {
   basePath: string;
 };
 
 export class EggAdaptor implements IServerAdapter {
-  protected readonly app: EggCore;
+  protected readonly app: IApp;
   protected basePath = '';
   protected bullBoardQueues: BullBoardQueues | undefined;
   protected errorHandler:
@@ -26,7 +25,7 @@ export class EggAdaptor implements IServerAdapter {
   protected uiConfig: UIConfig = {};
   protected entryRoute: AppViewRoute | null = null;
   protected apiRoutes: AppControllerRoute[] | null = null;
-  constructor(app: EggCore, opt: EggAdaptorOpt) {
+  constructor(app: IApp, opt: EggAdaptorOpt) {
     this.app = app;
     this.setBasePath(opt.basePath);
   }
@@ -80,7 +79,7 @@ export class EggAdaptor implements IServerAdapter {
     this.basePath = path;
     return this;
   }
-  async handleRouteError(ctx: EggCore['context'], next: () => Promise<void>) {
+  async handleRouteError(ctx: IApp['context'], next: () => Promise<void>) {
     try {
       await next();
     } catch (error) {

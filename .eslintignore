@@ -1,3 +1,5 @@
 test/fixtures
 coverage
 __snapshots__
+*.js
+*.d.ts

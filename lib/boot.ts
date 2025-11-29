@@ -1,18 +1,13 @@
-import { EggCore, ILifecycleBoot } from '@eggjs/core';
-import { BullBoardClientOptions } from './config/config.default.js';
-
+import type { IBoot } from 'egg';
 import { createBullBoard } from '@bull-board/api';
 
-import { EggAdaptor } from './utils/adaptor.js';
-import { appAssert, MESSAGE_PREFIX } from './utils/helper.js';
-
-export type BullBoardClient = {
-  instance: ReturnType<typeof createBullBoard>;
-};
+import { EggAdaptor } from './utils/adaptor';
+import { appAssert, MESSAGE_PREFIX } from './utils/helper';
+import { BullBoardClient, BullBoardClientOptions, IApp } from './types';
 
 export function createBullBoardClient(
   config: BullBoardClientOptions,
-  app: EggCore,
+  app: IApp,
   clientName = 'default'
 ): BullBoardClient {
   const { basePath, boardOptions } = config;
@@ -35,19 +30,12 @@ export function createBullBoardClient(
   return client;
 }
 
-export class BullBoardBootHook implements ILifecycleBoot {
-  private readonly app: EggCore;
-  constructor(app: EggCore) {
+export class BullBoardBootHook implements IBoot {
+  private readonly app: IApp;
+  constructor(app: IApp) {
     this.app = app;
   }
   configWillLoad(): void {
     this.app.addSingleton('bullboard', createBullBoardClient as any);
-    // Reflect.defineProperty(this.app, 'bullboard', {
-    //   get() {
-    //     return this.bullboard;
-    //   },
-    // });
   }
-
-  configDidLoad(): void {}
 }

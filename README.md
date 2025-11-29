@@ -24,6 +24,8 @@ Description here.
 npm i egg-bullboard-plugin
 ```
 
+> **Note:** If you're using EggJS v3, install the compatible version: `npm i egg-bullboard-plugin@3`
+
 ## Prerequisites
 
 This plugin depends on the following EggJS plugins:
