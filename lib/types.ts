@@ -3,7 +3,7 @@ import type { BoardOptions } from '@bull-board/api/typings/app';
 import type { Agent, Application } from 'egg';
 export interface BullBoardClientOptions {
   basePath: string;
-  boardOptions: BoardOptions;
+  boardOptions?: BoardOptions;
 }
 
 export interface BullBoardClientsOptions {

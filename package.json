@@ -1,6 +1,6 @@
 {
   "name": "egg-bullboard-plugin",
-  "version": "3.0.0",
+  "version": "3.0.3",
   "publishConfig": {
     "access": "public"
   },
@@ -43,7 +43,8 @@
   },
   "files": [
     "config/*.js",
-    "lib/*.js",
+    "lib/**/*.js",
+    "lib/**/*.d.ts",
     "agent.js",
     "app.js",
     "index.d.ts"
