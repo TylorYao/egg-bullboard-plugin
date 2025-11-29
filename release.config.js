@@ -4,12 +4,12 @@ module.exports = {
   branches: [
     {
       name: 'main',
-      range: '4.x', // or '2.x' depending on what main should publish
+      range: '4.x', // Allow main to publish 4.x versions
       channel: 'next',
     },
     {
       name: 'v3',
-      range: '3.x', // lock to major version 3, forces releases to start at 3.0.0
+      // range: '3.x', // lock to major version 3, forces releases to start at 3.0.0
       channel: 'latest', // publish under npm dist-tag 'latest'
     },
   ],

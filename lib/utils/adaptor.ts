@@ -119,9 +119,8 @@ export class EggAdaptor implements IServerAdapter {
       const methods = toArray(apiRoute.method);
       methods.forEach(method => {
         routes.forEach(routePath => {
-          this.app.router.get;
           this.app.router[method](
-            path.join(this.basePath, routePath),
+            this.composePath(routePath),
             this.handleRouteError,
             async ctx => {
               const res = await apiRoute.handler({
