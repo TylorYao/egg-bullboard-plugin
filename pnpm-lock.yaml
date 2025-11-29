@@ -36,6 +36,9 @@ importers:
       egg:
         specifier: '4'
         version: 4.0.10
+      egg-view-ejs:
+        specifier: ^3.0.0
+        version: 3.0.0
       eslint:
         specifier: '8'
         version: 8.57.1
@@ -77,7 +80,7 @@ packages:
     resolution: {integrity: sha512-qBcknbBufNHlui137Hft8xauQMTZDKdophmLFv05r2eNmdIv/MlPuP4TdUknHG68UdWLgVZwgxVe735HzJNIwA==}
 
   '@bull-board/api@6.14.2':
-    resolution: {integrity: sha512-UzkvN/wM+1qS73BS43a75LYkRzpBpCCUKlaGq0hp3dM5MNmdF1mx7LMGYgXPt91gqF8j4jq9Y/zCpC3Sqs3RLQ==, tarball: https://artifacts.corp.zoom.us:443/artifactory/api/npm/zoom-npm-virtual/@bull-board/api/-/api-6.14.2.tgz}
+    resolution: {integrity: sha512-UzkvN/wM+1qS73BS43a75LYkRzpBpCCUKlaGq0hp3dM5MNmdF1mx7LMGYgXPt91gqF8j4jq9Y/zCpC3Sqs3RLQ==}
     peerDependencies:
       '@bull-board/ui': 6.14.2
 
@@ -955,6 +958,10 @@ packages:
     engines: {node: '>= 18.19.0'}
     hasBin: true
 
+  egg-view-ejs@3.0.0:
+    resolution: {integrity: sha512-NieVt4Rh+aXFeNcpp6SZRQZ6hLFL9kexKnN8D98W1RCchZMoewOT1AD5IZMatt2yHV02zv22m3u7x1OmQufJKQ==, tarball: https://artifacts.corp.zoom.us:443/artifactory/api/npm/zoom-npm-virtual/egg-view-ejs/-/egg-view-ejs-3.0.0.tgz}
+    engines: {node: '>=14.0.0'}
+
   egg@4.0.10:
     resolution: {integrity: sha512-njC/2P7OChCE0iB+OFBEvEWThIyUVIQWlsrXTtJzBwKUZYmohOsF7tFYW5HqNSuAv31Cx8GqZZ2J4w2nM4+GaA==}
     engines: {node: '>= 18.19.0'}
@@ -1732,7 +1739,7 @@ packages:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
 
   lodash@4.17.21:
-    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==, tarball: https://artifacts.corp.zoom.us:443/artifactory/api/npm/zoom-npm-virtual/lodash/-/lodash-4.17.21.tgz}
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
   log-symbols@4.1.0:
     resolution: {integrity: sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==}
@@ -2124,7 +2131,7 @@ packages:
     engines: {node: '>=16.0.0'}
 
   redis-info@3.1.0:
-    resolution: {integrity: sha512-ER4L9Sh/vm63DkIE0bkSjxluQlioBiBgf5w1UuldaW/3vPcecdljVDisZhmnCMvsxHNiARTTDDHGg9cGwTfrKg==, tarball: https://artifacts.corp.zoom.us:443/artifactory/api/npm/zoom-npm-virtual/redis-info/-/redis-info-3.1.0.tgz}
+    resolution: {integrity: sha512-ER4L9Sh/vm63DkIE0bkSjxluQlioBiBgf5w1UuldaW/3vPcecdljVDisZhmnCMvsxHNiARTTDDHGg9cGwTfrKg==}
 
   reflect.getprototypeof@1.0.10:
     resolution: {integrity: sha512-00o4I+DVrefhv+nX0ulyi3biSHCPDe+yLv5o/p6d/UVlirijB8E16FtfwSAi4g3tcqrQ4lRAqQSoFEZJehYEcw==}
@@ -3803,6 +3810,10 @@ snapshots:
       - '@swc/core'
       - '@swc/wasm'
       - '@types/node'
+
+  egg-view-ejs@3.0.0:
+    dependencies:
+      ejs: 3.1.10
 
   egg@4.0.10:
     dependencies:

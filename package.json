@@ -54,7 +54,8 @@
     "rimraf": "6",
     "tshy": "3",
     "tshy-after": "1",
-    "typescript": "5"
+    "typescript": "5",
+    "egg-view-ejs": "^3.0.0"
   },
   "scripts": {
     "lint": "eslint --cache src test --ext .ts",
