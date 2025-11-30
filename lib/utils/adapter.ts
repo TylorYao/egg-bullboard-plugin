@@ -15,6 +15,10 @@ export type EggAdapterOpt = {
   basePath: string;
 };
 
+/**
+ * @description notice this adapter‘s setX methods might modify app config
+ * so they should be called in app lifecycles where these modifications were still allowed
+ */
 export class EggAdapter implements IServerAdapter {
   protected readonly app: IApp;
   protected basePath = '';
@@ -41,8 +45,8 @@ export class EggAdapter implements IServerAdapter {
      * However, due to limitations in the view plugin's path resolution,
      * we modify the view root configuration here as a workaround.
      * This would impact view rendering performance by adding an extra round of path searching
-     * but simplifies the implementation,otherwise we need to manually resolve the render engine
-     * which should violate the framework principal
+     * but simplifies the rendering process here, otherwise we need to manually resolve the render engine
+     * which should violate the framework's design intention
      */
     this.app.config.view.root = [this.app.config.view.root, viewPath].join(',');
     return this;
@@ -100,8 +104,17 @@ export class EggAdapter implements IServerAdapter {
         const { status, body } = this.errorHandler(error as Error);
         ctx.status = status ?? 500;
         ctx.body = body;
-      }
+      } else throw error;
     }
+  };
+
+  handleEntryRoute = async (ctx: IApp['context']) => {
+    appAssert(!!this.entryRoute, 'entryRoute not set');
+    const { name, params } = this.entryRoute.handler({
+      basePath: this.basePath,
+      uiConfig: this.uiConfig,
+    });
+    await ctx.render(name, params);
   };
 
   protected registerEntryRoute() {
@@ -113,20 +126,13 @@ export class EggAdapter implements IServerAdapter {
       this.app.router[entryRoute.method](
         joinEntryPath,
         this.handleRouteError,
-        async ctx => {
-          const { name, params } = entryRoute.handler({
-            basePath: this.basePath,
-            uiConfig: this.uiConfig,
-          });
-          await ctx.render(name, params);
-        }
+        this.handleEntryRoute
       );
     });
   }
   protected registerApiRoute() {
-    const { apiRoutes, bullBoardQueues } = this;
+    const { apiRoutes } = this;
     appAssert(!!apiRoutes, 'apiRoutes not set');
-    appAssert(!!bullBoardQueues, 'bullBoardQueues not set');
     apiRoutes.forEach(apiRoute => {
       const routes = toArray(apiRoute.route);
       const methods = toArray(apiRoute.method);
@@ -136,8 +142,9 @@ export class EggAdapter implements IServerAdapter {
             this.composeRoutePath(routePath),
             this.handleRouteError,
             async ctx => {
+              appAssert(!!this.bullBoardQueues, 'bullBoardQueues not set');
               const res = await apiRoute.handler({
-                queues: bullBoardQueues,
+                queues: this.bullBoardQueues,
                 body: ctx.body,
                 params: ctx.params,
                 query: ctx.query,
