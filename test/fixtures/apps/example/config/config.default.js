@@ -5,4 +5,9 @@ export default {
       basePath: '/bullboard',
     },
   },
+  view: {
+    mapping: {
+      '.ejs': 'ejs',
+    },
+  },
 };

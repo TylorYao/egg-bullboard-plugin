@@ -23,3 +23,6 @@ lib/**/*.d.ts
 lib/*.js
 lib/**/*.js
 
+# vscode
+.vscode/
+

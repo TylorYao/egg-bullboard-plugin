@@ -17,10 +17,14 @@ describe('test/index.test.ts', () => {
     const pluginRes = await app.httpRequest().get('/plugin').expect(200);
     assert.strictEqual(pluginRes.body.enable, true);
     assert(pluginRes.body.dependencies.includes('static'));
-    assert(pluginRes.body.dependencies.includes('ejs'));
+    assert(pluginRes.body.dependencies.includes('view'));
   });
   it('should GET /client', async () => {
     const clientRest = await app.httpRequest().get('/client').expect(200);
     assert(clientRest.body.instance);
+  });
+
+  it('should GET /bullboard', async () => {
+    await app.httpRequest().get('/bullboard').expect(200);
   });
 });
