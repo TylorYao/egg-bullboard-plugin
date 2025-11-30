@@ -8,7 +8,7 @@ import type { Queue } from 'bullmq';
  *
  * Note: Do not mix this encapsulated API with the original BullBoard Client API.
  * For example, adding a BullMQ queue via `this.instance.addQueue` and removing it
- * with `this.removeQueue` will fail silentlt, as the class instance has not track of those directly added queue instances.
+ * with `this.removeQueue` will fail silentlt, as the class instance has no track of those directly added queue instances.
  */
 export class BullBoardClientImpl implements BullBoardClient {
   public instance: BullBoardClient['instance'];

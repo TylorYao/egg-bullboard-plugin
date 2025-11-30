@@ -8,6 +8,7 @@
     "@typescript-eslint/indent": "off",
     "array-bracket-spacing": "off",
     "comma-dangle": "off",
-    "newline-per-chained-call": "off"
+    "newline-per-chained-call": "off",
+    "curly": "off"
   }
 }
