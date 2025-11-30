@@ -4,6 +4,7 @@ import { createBullBoard } from '@bull-board/api';
 import { EggAdapter } from './utils/adapter';
 import { appAssert, MESSAGE_PREFIX } from './utils/helper';
 import { BullBoardClient, BullBoardClientOptions, IApp } from './types';
+import { BullBoardClientImpl } from './utils/client';
 
 export function createBullBoardClient(
   config: BullBoardClientOptions,
@@ -20,9 +21,7 @@ export function createBullBoardClient(
     queues: [],
     serverAdapter,
   });
-  const client: BullBoardClient = {
-    instance,
-  };
+  const client: BullBoardClient = new BullBoardClientImpl(instance);
   serverAdapter.registerPlugin();
   app.coreLogger.info(
     `${MESSAGE_PREFIX} client ${clientName} created successfully`

@@ -1,16 +1,19 @@
 {
   "name": "egg-bullboard-plugin",
-  "version": "3.0.3",
+  "version": "3.0.6",
   "publishConfig": {
     "access": "public"
   },
   "description": "eggjs bullboard adapter plugin for bullmq",
   "peerDependencies": {
-    "@bull-board/api": ">=6.0.0"
+    "bullmq": "^5.0.0"
+  },
+  "dependencies": {
+    "@bull-board/api": "^6.14.2"
   },
   "devDependencies": {
+    "bullmq": "^5.0.0",
     "@arethetypeswrong/cli": "^0.17.3",
-    "@bull-board/api": "^6.14.2",
     "@eggjs/tsconfig": "^1.3.2",
     "@semantic-release/commit-analyzer": "^9.0.2",
     "@semantic-release/github": "^8.1.0",
@@ -39,8 +42,7 @@
     "ci": "npm run lint && npm run cov && npm run prepublishOnly",
     "build": "tsc -p ./tsconfig.json",
     "clean": "tsc --build --clean",
-    "prepublishOnly": "npm run clean && npm run build",
-    "rm": "rm -f lib/*.js lib/*.d.ts lib/**/*.js lib/**/*.d.ts config/*.js config/*.d.ts config/**/*.js config/**/*.d.ts app.js app.d.ts agent.js agent.d.ts"
+    "prepublishOnly": "npm run clean && npm run build"
   },
   "files": [
     "config/*.js",
