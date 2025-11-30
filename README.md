@@ -24,7 +24,7 @@ Description here.
 npm i egg-bullboard-plugin
 ```
 
-> **Note:** If you're using EggJS v3, install the compatible version: `npm i egg-bullboard-plugin@3`
+> **Note:** The latest version 3.x is primarily intended for Egg.js v3. Support for Egg.js v4 has been introduced in the 1.x release, but it is not yet fully tested.
 
 ## Prerequisites
 
@@ -32,11 +32,13 @@ This plugin depends on the following EggJS plugins:
 
 - **static plugin** (built-in): Required to serve BullBoard static assets
 - **view plugin** (built-in): Required to resolve BullBoard UI file render engine
-- **ejs plugin**: Required to render the BullBoard user interface, as it is written in EJS
+- **ejs plugin**: Required to render the BullBoard UI, as it is written in EJS
 
 Make sure these plugins are enabled in your application's plugin configuration.
 
 ## Usage
+
+### Enable bullboard plugin
 
 ```js
 // {app_root}/config/plugin.js
@@ -45,49 +47,70 @@ export default {
     enable: true,
     package: 'egg-bullboard-plugin',
   },
-  view: {
-    mapping: {
-      '.ejs': 'ejs', // this maps .ejs file to the render engine of ejs, which by this case registered by egg-view-ejs, any capable one could do
-    },
-  },
-  ejs: {
-    enable: true,
-    package: 'egg-view-ejs',
-  },
-  // recommend ejs rendering plugin but could be replaced, any capable one could do, as long as the ext mapping is correct. so regarding this the required egg-view-ejs dependency is removed for flexibility, BUT DON'T FORGET TO ENABLE ONE!!!
-
-  // static plugin is enabled by default; this bullboard plugin will tweak its configuration to serve bullboard UI assets
 };
 ```
-
-## Configuration
 
 ```js
 // {app_root}/config/config.default.js
 export default {
   bullboard: {
     client: {
-      basePath: '', // the base path to view bullboard, eg: https://localhost:7001/{basePath}
-      boardOptions: {}, // the createBullBoard options from @bull-board/api
+      basePath: '',
+      boardOptions: {},
     },
   },
 };
 ```
 
+- `basePath`: the base path to view bullboard, eg: `https://localhost:7001/{basePath}`
+- `boardOptions`: the `createBullBoard` options from [@bull-board/api](https://github.com/felixmosh/bull-board)
+
 see [src/config/config.default.ts](src/config/config.default.ts) for more detail.
+
+### Configure view plugin
+
+This maps `.ejs` file to the render engine of ejs, which by this case registered by egg-view-ejs.
+
+```js
+// {app_root}/config/plugin.js
+export default {
+  view: {
+    mapping: {
+      '.ejs': 'ejs',
+    },
+  },
+};
+```
+
+### Configure ejs plugin
+
+Recommend ejs rendering plugin but could be replaced, any capable one could do, as long as the ext mapping is correct. So regarding this the required egg-view-ejs dependency is removed for flexibility, BUT DON'T FORGET TO ENABLE ONE!!!
+
+```js
+// {app_root}/config/plugin.js
+export default {
+  ejs: {
+    enable: true,
+    package: 'egg-view-ejs',
+  },
+};
+```
+
+### Static plugin
+
+Static plugin is enabled by default; this bullboard plugin will tweak its configuration to serve bullboard UI assets.
 
 ## Example
 
-After the plugin is loaded, the BullBoard client instance is mounted to the app. You can access it via `app.bullboard` to get the `BullBoardClient`, and use its API to manage BullMQ queues.
+After the plugin is loaded, the `BullBoard` client instance is mounted to the app. You can access it via `app.bullboard` to get the `BullBoardClient`, and use its API to manage `BullMQ` queues.
 
-### Initializing Queues at App Startup
+### Adding Queues To Display Board
 
-Queues should be instantiated and added to BullBoard during app initialization. Here's an example:
+You could use `app.bullboard` api to add queue to display. Here's an example:
 
 ```js
 // {app_root}/app.js
 import { Queue } from 'bullmq';
-import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 
 export default class AppBootHook {
   constructor(app) {
@@ -112,50 +135,14 @@ export default class AppBootHook {
         port: 6379,
       },
     });
-
     // Add queues to BullBoard
-    bullboard.instance.addQueue(new BullMQAdapter(emailQueue));
-    bullboard.instance.addQueue(new BullMQAdapter(notificationQueue));
-
-    // Store queues in app for later use
-    this.app.queue = {
-      email: emailQueue,
-      notification: notificationQueue,
-    };
-
-    this.app.coreLogger.info(
-      'BullMQ queues initialized and added to BullBoard'
-    );
+    bullboard.addQueue(emailQueue);
+    bullboard.instance.addQueue(notificationQueue);
   }
 }
 ```
 
-### Using Queues in Your Application
-
-Once queues are initialized, you can use them throughout your application:
-
-```js
-// {app_root}/app/controller/job.js
-import { Controller } from 'egg';
-
-class JobController extends Controller {
-  async sendEmail() {
-    const { ctx, app } = this;
-
-    // Use the queue that was initialized in app.js
-    await app.queue.email.add('send-email', {
-      to: ctx.request.body.to,
-      subject: ctx.request.body.subject,
-      body: ctx.request.body.body,
-    });
-
-    ctx.body = { success: true, message: 'Email job added to queue' };
-  }
-}
-
-export default JobController;
-```
-
+The `app.board` is an instance of `BullBoardClient`, on which the `instance` attr is an instance of `createBullBoard`;
 For more details about the `createBullBoard` API and available methods, please refer to the [@bull-board/api documentation](https://github.com/felixmosh/bull-board).
 
 ## Interface
@@ -178,6 +165,22 @@ interface BullBoardClientOptions {
    * @see https://github.com/felixmosh/bull-board
    */
   boardOptions: BoardOptions;
+}
+```
+
+### BullBoardClient
+
+Provides a convenience wrapper for `BullMQAdapter` instantiation over the `BullBoard` Client API.
+
+Note: Do not mix this encapsulated API with the original BullBoard Client API. For example, adding a BullMQ queue via `this.instance.addQueue` and removing it with `this.removeQueue` will fail silently, as the class instance has no track of those directly added queue instances.
+
+```typescript
+interface BullBoardClient {
+  instance: ReturnType<typeof createBullBoard>;
+  setQueues(queues: Queue[]): void;
+  replaceQueues(queues: Queue[]): void;
+  addQueue: (queue: Queue) => void;
+  removeQueue: (queueOrName: string | Queue) => void;
 }
 ```
 
