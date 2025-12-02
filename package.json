@@ -1,12 +1,13 @@
 {
   "name": "egg-bullboard-plugin",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "publishConfig": {
     "access": "public"
   },
   "description": "eggjs bullboard adapter plugin for bullmq",
   "peerDependencies": {
-    "bullmq": "^5.0.0"
+    "bullmq": "^5.0.0",
+    "egg": ">=3.0.0"
   },
   "dependencies": {
     "@bull-board/api": "^6.14.2"

@@ -11,9 +11,13 @@ import { appAssert, toArray } from './helper';
 import path from 'node:path';
 import type { IApp } from '../types';
 
+import type { Context } from 'egg';
+
 export type EggAdapterOpt = {
   basePath: string;
 };
+
+const BYPASSY_CSRF = ['api', 'static'];
 
 /**
  * @description notice this adapter‘s setX methods might modify app config
@@ -33,7 +37,21 @@ export class EggAdapter implements IServerAdapter {
   constructor(app: IApp, opt: EggAdapterOpt) {
     this.app = app;
     this.setBasePath(opt.basePath);
+    this.modifyCSRFIgnore();
   }
+
+  protected modifyCSRFIgnore() {
+    appAssert(!!this.basePath, 'basePath is required');
+    if (this.app.config.security?.csrf?.enable) {
+      const originalIgnore = toArray(
+        this.app.config.security.csrf.ignore
+      ).filter(Boolean);
+      this.app.config.security.csrf.ignore = originalIgnore.concat(
+        this.basePath
+      );
+    }
+  }
+
   public setQueues(bullBoardQueues: BullBoardQueues): IServerAdapter {
     this.bullBoardQueues = bullBoardQueues;
     return this;
@@ -117,6 +135,30 @@ export class EggAdapter implements IServerAdapter {
     await ctx.render(name, params);
   };
 
+  /**
+   * @deprecated currently not graceful way to adapt eggjs‘ csrf mechanism in such way
+   */
+  setCSRFCookie = async (ctx: Context, next: () => Promise<void>) => {
+    await next();
+    if (BYPASSY_CSRF.every(part => !ctx.path.includes(`/${part}/`))) {
+      ctx.cookies.set('XSRF-TOKEN', ctx.csrf, {
+        sameSite: 'lax',
+        path: this.basePath,
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: false,
+      });
+    }
+  };
+  /**
+   * @deprecated currently not graceful way to adapt eggjs‘ csrf mechanism in such way
+   */
+  adaptCSRFHeader = async (ctx: Context, next: () => Promise<void>) => {
+    const csrfHeaderName =
+      ctx.app.config.security?.csrf?.headerName ?? 'x-csrf-token';
+    ctx.set(csrfHeaderName, ctx.get('x-xsrf-token'));
+    await next();
+  };
+
   protected registerEntryRoute() {
     const { entryRoute } = this;
     appAssert(!!entryRoute, 'entryRoute not set');
@@ -126,6 +168,7 @@ export class EggAdapter implements IServerAdapter {
       this.app.router[entryRoute.method](
         joinEntryPath,
         this.handleRouteError,
+        // this.setCSRFCookie,
         this.handleEntryRoute
       );
     });
@@ -141,6 +184,7 @@ export class EggAdapter implements IServerAdapter {
           this.app.router[method](
             this.composeRoutePath(routePath),
             this.handleRouteError,
+            // this.adaptCSRFHeader,
             async ctx => {
               appAssert(!!this.bullBoardQueues, 'bullBoardQueues not set');
               const res = await apiRoute.handler({
